@@ -1,89 +1,65 @@
-SET FOREIGN_KEY_CHECKS = 0;
+drop table if exists products cascade;
+create table products (id bigserial, title varchar(255), description varchar(5000), price int, primary key(id));
+insert into products
+(title, description, price) values
+('Cheese', 'Fresh cheese', 320),
+('Milk', 'Fresh milk', 80),
+('Apples', 'Fresh apples', 80),
+('Bread', 'Fresh bread', 30);
 
-DROP TABLE IF EXISTS roles;
+drop table if exists categories cascade;
+create table categories (id bigserial, title varchar(255), primary key(id));
+insert into categories
+(title) values
+('Food'),
+('Devices');
 
-CREATE TABLE roles (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  name varchar(50) DEFAULT NULL,
+drop table if exists products_categories cascade;
+create table products_categories (product_id bigint not null, category_id bigint not null, primary key(product_id, category_id),
+foreign key (product_id) references products(id), foreign key (category_id) references categories(id));
+insert into products_categories (product_id, category_id) values (1, 1), (2, 1), (3, 1), (4, 2);
+
+drop table if exists users;
+create table users (
+  id                    bigserial,
+  username              VARCHAR(50) not null UNIQUE,
+  password              VARCHAR(80) not null,
+  first_name            VARCHAR(50),
+  last_name             VARCHAR(50),
+  email                 varchar(50) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+);
+
+drop table if exists roles;
+create table roles (
+  id                    serial,
+  name                  VARCHAR(50) not null,
+  primary key (id)
+);
+
+drop table if exists users_roles;
+create table users_roles (
+  user_id               INT NOT NULL,
+  role_id               INT NOT NULL,
+  primary key (user_id, role_id),
+  FOREIGN KEY (user_id)
+  REFERENCES users (id),
+  FOREIGN KEY (role_id)
+  REFERENCES roles (id)
+);
 
 INSERT INTO roles (name)
 VALUES
 ('ROLE_EMPLOYEE'),('ROLE_MANAGER'),('ROLE_ADMIN');
 
-DROP TABLE IF EXISTS users;
+insert into users (username, password, first_name, last_name, email)
+values
+('admin','$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i','admin','admin','admin@gmail.com'),
+('user','$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i','user','user','user@gmail.com');
 
-CREATE TABLE users (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  username varchar(50) NOT NULL,
-  password char(80) NOT NULL,
-  first_name varchar(50) NOT NULL,
-  last_name varchar(50) NOT NULL,
-  email varchar(50) NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-INSERT INTO users (username,password,first_name,last_name,email)
-VALUES
-('alex','$2a$10$CGamJWPYokRss2FX6WcBJOgFIDKyUoCYnrGtepfVQyDSTdngSxrzK','Alex','GeekBrains','alex@gb.com');
-
-DROP TABLE IF EXISTS users_roles;
-
-CREATE TABLE users_roles (
-  user_id int(11) NOT NULL,
-  role_id int(11) NOT NULL,
-
-  PRIMARY KEY (user_id, role_id),
-
-  KEY FK_ROLE_idx (role_id),
-
-  CONSTRAINT FK_USER_05 FOREIGN KEY (user_id)
-  REFERENCES users (id)
-  ON DELETE NO ACTION ON UPDATE NO ACTION,
-
-  CONSTRAINT FK_ROLE FOREIGN KEY (role_id)
-  REFERENCES roles (id)
-  ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO users_roles (user_id, role_id)
-VALUES
+insert into users_roles (user_id, role_id)
+values
 (1, 1),
 (1, 2),
-(1, 3);
-
-DROP TABLE IF EXISTS students;
-
-CREATE TABLE students (
-	id int(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) DEFAULT NULL,
-    PRIMARY KEY(id)
-) ENGINE=InnoDB CHARSET=utf8;
-
-DROP TABLE IF EXISTS courses;
-
-CREATE TABLE courses (
-	id int(11) NOT NULL AUTO_INCREMENT,
-    title VARCHAR(100) DEFAULT NULL,
-    PRIMARY KEY(id)
-) ENGINE=InnoDB CHARSET=utf8;
-
-DROP TABLE IF EXISTS students_courses;
-
-CREATE TABLE students_courses (
-	student_id int(11) NOT NULL,
-    course_id int(11) NOT NULL,
-
-    PRIMARY KEY (student_id, course_id),
-
-    CONSTRAINT FK_STUDENT FOREIGN KEY (student_id)
-    REFERENCES students (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
-
-    CONSTRAINT FK_COURSE FOREIGN KEY (course_id)
-    REFERENCES courses (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB CHARSET=utf8;
-
-SET FOREIGN_KEY_CHECKS = 1;
+(1, 3),
+(2, 1);
