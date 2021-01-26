@@ -1,5 +1,7 @@
 package com.geekbrains.geekspring.services;
 
+import com.geekbrains.geekspring.entities.Product;
+import com.geekbrains.geekspring.exceptions.UserNotFoundException;
 import com.geekbrains.geekspring.repositories.RoleRepository;
 import com.geekbrains.geekspring.repositories.UserRepository;
 import com.geekbrains.geekspring.entities.SystemUser;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,5 +76,17 @@ public class UserServiceImpl implements UserService {
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+	}
+
+	public List<User> getAllUsers() {
+		return (List<User>) userRepository.findAll();
+	}
+
+	public User saveOrUpdate(User user) {
+		return userRepository.save(user);
+	}
+
+	public User findById(Long id) {
+		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Can't found user with id = " + id));
 	}
 }

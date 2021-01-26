@@ -48,8 +48,33 @@
 <div class="container">
     <h1>Admin Panel</h1>
     <br>
-    <span th:text="${email}"/>
+<!--    <span th:text="${username}"/>-->
+<!--    <span th:text="${email}"/>-->
 </div>
+
+
+<!-- Headline -->
+<div class="container">
+
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <td>Id</td>
+            <td>username</td>
+            <td>email</td>
+        </tr>
+        </thead>
+
+        <tr class="myTableRow responsive-row" th:each="user : ${usersList}" th:attr="entryIndex=${user.id}">
+            <td th:text="${user.id}"/>
+            <td th:text="${user.userName}"/>
+            <td th:text="${user.email}"/>
+            <td><a th:href="@{'/admin/edit/' + ${user.userName}}">Редактировать</a></td>
+        </tr>
+    </table>
+</div>
+
+
 
 <!--===============================================================================================-->
 <script type="text/javascript" th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
@@ -67,4 +92,7 @@
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 
 </body>
+
+
+
 </html>
