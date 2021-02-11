@@ -1,0 +1,37 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.baeldung.grpc;
+
+//import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+
+message UserRoleRequest {
+    repeated Role roles = 1;
+}
+
+message UserRoleResponse {
+    string greeting = 1;
+}
+
+message Role {
+    int32 id = 1;
+    string name = 2;
+}
+
+message User {
+    int64 id = 1;
+    string userName = 2;
+    string password = 3;
+    string firstName = 4;
+    string lastName = 5;
+    string email = 6;
+    repeated Role roles = 7;
+}
+
+service UserRoleService {
+    rpc userRole(UserRoleRequest) returns (UserRoleResponse){
+//        option (google.protobuf) = {
+//            get: "/edit/{username}"
+//        };
+    };
+}
