@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "courses")
+//@Table(name = "courses")
 public class Course {
     public final static int PROJECT_NAME_MAX_LENGTH = 255;
 
@@ -24,7 +24,7 @@ public class Course {
             joinColumns=@JoinColumn(name="course_id"),
             inverseJoinColumns=@JoinColumn(name="student_id")
     )
-    @Cascade({org.hibernate.annotations.CascadeType.DELETE, org.hibernate.annotations.CascadeType.DETACH})
+  //  @Cascade({org.hibernate.annotations.CascadeType.DELETE, org.hibernate.annotations.CascadeType.DETACH})
     private List<Student> students;
 
     public Long getId() {

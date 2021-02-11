@@ -13,14 +13,18 @@
 
 <body>
     <h1>Изменить пользователя</h1>
-    <form th:action="@{/admin/edit}" th:object="${user}" method="POST">
+    <form th:action="@{/admin/edit}" th:object="${user}" th:object = "${role}"  method="POST">
         <input hidden th:field="*{id}"/>
         <br>
         Name: <input th:field="*{userName}"/>
         <br>
         Email: <input th:field="*{email}"/>
         <br>
+<!--        Role: <input th:field="*{}()}"/>-->
+<!--        <br>-->
         <input type="submit" value="Сохранить" />
+
+
     </form>
     <br>
 </body>

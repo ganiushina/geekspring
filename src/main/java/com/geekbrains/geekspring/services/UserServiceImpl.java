@@ -1,6 +1,7 @@
 package com.geekbrains.geekspring.services;
 
 import com.geekbrains.geekspring.entities.Product;
+
 import com.geekbrains.geekspring.exceptions.UserNotFoundException;
 import com.geekbrains.geekspring.repositories.RoleRepository;
 import com.geekbrains.geekspring.repositories.UserRepository;
@@ -16,9 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +57,11 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(systemUser.getLastName());
 		user.setEmail(systemUser.getEmail());
 
-		user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_EMPLOYEE")));
+		com.baeldung.grpc.Role role = com.baeldung.grpc.Role.newBuilder()
+				.setName("ROLE_EMPLOYEE")
+				.build();
+
+		user.setRoles(Arrays.asList(roleRepository.findOneByName(role.getName())));
 
 		userRepository.save(user);
 	}
@@ -67,11 +70,11 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = userRepository.findOneByUserName(userName);
-		if (user == null) {
-			throw new UsernameNotFoundException("Invalid username or password.");
-		}
+
 		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
 				mapRolesToAuthorities(user.getRoles()));
+
+
 	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
